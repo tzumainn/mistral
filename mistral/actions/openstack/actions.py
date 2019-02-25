@@ -33,7 +33,7 @@ LOG = log.getLogger(__name__)
 CONF = cfg.CONF
 
 
-IRONIC_API_VERSION = '1.34'
+IRONIC_API_VERSION = '1.52'
 """The default microversion to pass to Ironic API.
 
 1.34 corresponds to Pike final.
