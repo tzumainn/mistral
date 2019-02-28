@@ -41,6 +41,8 @@
         "flavors_findall": "flavors.findall",
         "flavors_get": "flavors.get",
         "flavors_list": "flavors.list",
+        "flavors_set_keys": "flavors.set_keys",
+        "flavors_unset_keys": "flavors.unset_keys",
         "hypervisor_stats_convert_into_with_meta": "hypervisor_stats.convert_into_with_meta",
         "hypervisor_stats_statistics": "hypervisor_stats.statistics",
         "hypervisors_convert_into_with_meta": "hypervisors.convert_into_with_meta",
