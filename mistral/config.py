@@ -520,7 +520,7 @@ openstack_actions_opts = [
         'modules-support-region',
         default=['nova', 'glance', 'heat', 'neutron', 'cinder',
                  'trove', 'ironic', 'designate', 'murano', 'tacker', 'senlin',
-                 'aodh', 'gnocchi'],
+                 'aodh', 'gnocchi', 'oesiironic'],
         help=_('List of module names that support region in actions.')
     ),
     cfg.StrOpt(
@@ -594,6 +594,42 @@ yaql_opts = [
     )
 ]
 
+ironic_opts = [
+    cfg.URIOpt(
+        'api_endpoint',
+        schemes=['http', 'https'],
+        deprecated_for_removal=True,
+        deprecated_reason='Endpoint lookup uses the service catalog via '
+                          'common keystoneauth1 Adapter configuration '
+                          'options. In the current release, api_endpoint will '
+                          'override this behavior, but will be ignored and/or '
+                          'removed in a future release. To achieve the same '
+                          'result, use the endpoint_override option instead.',
+        sample_default='http://ironic.example.org:6385/',
+        help='URL override for the Ironic API endpoint.'),
+    cfg.StrOpt(
+        'username',
+    ),
+    cfg.StrOpt(
+        'password',
+    ),
+    cfg.StrOpt(
+        'auth_url',
+    ),
+    cfg.StrOpt(
+        'project_name',
+    ),
+    cfg.StrOpt(
+        'project_domain_name',
+    ),
+    cfg.StrOpt(
+        'user_domain_name',
+    ),
+    cfg.StrOpt(
+        'auth_plugin',
+    ),
+]
+
 CONF = cfg.CONF
 
 API_GROUP = 'api'
@@ -612,6 +648,7 @@ KEYCLOAK_OIDC_GROUP = "keycloak_oidc"
 OPENSTACK_ACTIONS_GROUP = 'openstack_actions'
 YAQL_GROUP = "yaql"
 KEYSTONE_GROUP = "keystone"
+IRONIC_GROUP = "ironic"
 
 
 CONF.register_opt(wf_trace_log_name_opt)
@@ -643,6 +680,7 @@ CONF.register_opts(profiler_opts, group=PROFILER_GROUP)
 CONF.register_opts(keycloak_oidc_opts, group=KEYCLOAK_OIDC_GROUP)
 CONF.register_opts(openstack_actions_opts, group=OPENSTACK_ACTIONS_GROUP)
 CONF.register_opts(yaql_opts, group=YAQL_GROUP)
+CONF.register_opts(ironic_opts, group=IRONIC_GROUP)
 loading.register_session_conf_options(CONF, KEYSTONE_GROUP)
 
 CLI_OPTS = [
@@ -692,6 +730,7 @@ def list_opts():
         (KEYCLOAK_OIDC_GROUP, keycloak_oidc_opts),
         (OPENSTACK_ACTIONS_GROUP, openstack_actions_opts),
         (YAQL_GROUP, yaql_opts),
+        (IRONIC_GROUP, ironic_opts),
         (ACTION_HEARTBEAT_GROUP, action_heartbeat_opts),
         (None, default_group_opts)
     ]

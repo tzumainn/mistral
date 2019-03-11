@@ -14,6 +14,8 @@
 
 import functools
 
+from ironicclient import client as oesi_client
+
 from oslo_config import cfg
 from oslo_log import log
 from oslo_utils import importutils
@@ -68,6 +70,7 @@ mistralclient = _try_import('mistralclient.api.v2.client')
 muranoclient = _try_import('muranoclient.v1.client')
 neutronclient = _try_import('neutronclient.v2_0.client')
 novaclient = _try_import('novaclient.client')
+oesiironicclient = _try_import('ironicclient.v1.client')
 qinlingclient = _try_import('qinlingclient.v1.client')
 senlinclient = _try_import('senlinclient.v1.client')
 swift_client = _try_import('swiftclient.client')
@@ -331,6 +334,33 @@ class IronicAction(base.OpenStackAction):
             os_ironic_api_version=IRONIC_API_VERSION,
             insecure=context.insecure
         )
+
+    @classmethod
+    def _get_fake_client(cls):
+        return cls._get_client_class()("http://127.0.0.1:6385/")
+
+
+class OESIIronicAction(IronicAction):
+    _service_name = 'ironic'
+
+    @classmethod
+    def _get_client_class(cls):
+        return oesiironicclient.Client
+
+    def _create_client(self, context):
+
+        LOG.debug("OESI Ironic action security context: %s", context)
+        kwargs = {
+            'username': CONF.ironic.username,
+            'password': CONF.ironic.password,
+            'auth_url': CONF.ironic.auth_url,
+            'tenant_name': CONF.ironic.project_name,
+            'user_domain_name': CONF.ironic.user_domain_name,
+            'project_domain_name': CONF.ironic.project_domain_name,
+            'insecure': 'true',
+        }
+
+        return oesi_client.get_client(1, **kwargs)
 
     @classmethod
     def _get_fake_client(cls):
